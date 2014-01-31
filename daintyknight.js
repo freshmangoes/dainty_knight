@@ -1,4 +1,6 @@
 //Initialize enchant.js as the game engine
+
+//test for second commit
 enchant();
 //use2D = true;
 //on document load [...]
