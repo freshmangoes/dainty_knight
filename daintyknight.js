@@ -1,5 +1,7 @@
 //Initialize enchant.js as the game engine
 
+//Test Katie
+
 //test for second commit
 enchant();
 //use2D = true;
