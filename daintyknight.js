@@ -8,7 +8,10 @@ window.onload = function () {
     //Starting point. Creating a variable called game as the game.
     var game = new Game(1000, 600);
     
-    //set keybinds 
+    //arrays
+    var block_array;
+    
+    //set keybinds
     game.keybind(37, 'left');  //Left arrow key
     game.keybind(39, 'right');   //Right arrow key
     game.keybind(32, 'space');
@@ -30,8 +33,13 @@ window.onload = function () {
     //on game load [...]
     game.onload = function () {
         console.log("Dainty Knight! A game by Cake^3");
+        //list of variables
         var scene, label, bg, knight, time, enemy, block;
         
+        //make block array empty
+        block_array = [];
+        
+            
         //Create new scene
         scene = new Scene();
         //Creates new label
@@ -39,18 +47,31 @@ window.onload = function () {
         
         //Creates new background sprite
         bg = new Sprite(1000, 600);
+        //Load background image
+        bg.image = game.assets['sprites/level.png'];
+        scene.addChild(bg);
         
-        //Creates knight sprite starting at 40,500 coordinates
+        //Creates knight sprite starting at 40, 500 coordinates
         knight = new Sprite(64, 64);
         knight = Knight(10, 500);
-        
+        //Creates enemy sprite starting at 300, 500 coordinates
         enemy = new Sprite(64, 64);
         enemy = E_Knight(300, 500);
+        //Creates block sprite starting at 100, 480 coordinates
         
-        block = new Sprite(100, 30);
-        block = Block(100, 480);
+        
+        var x = 20;
+        for (var i = 0; i < 3; i++){
+            block = new Sprite(100, 30);
+            block = Block(x, 480);
+            x += 100;
+            scene.addChild(block);
+        }
+                
 
         var playerSpeed = 4;
+        
+        
         
         //Event listener for the left and right keys. Moves the player knight
         //left or right.
@@ -77,15 +98,15 @@ window.onload = function () {
 
         });
 
-        //Load background image
-        bg.image = game.assets['sprites/level.png'];
+        
         //Appends background and label to scene as children
         
-        scene.addChild(bg);
+        //add objects to the scene
+        
         scene.addChild(label);
         scene.addChild(knight);
         scene.addChild(enemy);
-        scene.addChild(block);
+        //scene.addChild(block);
         
         //Start scene
         game.pushScene(scene);
@@ -94,7 +115,7 @@ window.onload = function () {
     //Initializes game
     game.start();
 
-    //knigt "class"
+    //knigt class
     function Knight(x, y) {
         var knight = new Sprite(64, 64);
         knight.x = x;
@@ -103,7 +124,7 @@ window.onload = function () {
         knight.image = game.assets['sprites/sprite_neutral.png'];
         return knight;
     }
-    
+    //enemy knight class
     function E_Knight(x, y) {
         var enemy = new Sprite(64, 64);
         enemy.x = x;
@@ -111,12 +132,15 @@ window.onload = function () {
         enemy.image = game.assets['sprites/enemy_neutral.png'];
         return enemy;
     }
-    
-    function Block(x, y){
+    //block class
+    function Block(x, y) {
         var block = new Sprite(100, 30);
         block.x = x;
         block.y = y;
         block.image = game.assets['sprites/block.png'];
+        //push the block created onto the array
+        //array used in collisions
+        block_array.push(block);
         return block;
     }
     function jump_up(knight) {
