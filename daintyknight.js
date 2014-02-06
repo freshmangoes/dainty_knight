@@ -10,6 +10,7 @@ window.onload = function () {
     
     //arrays
     var block_array;
+    var e_array;
     
     //set keybinds
     game.keybind(37, 'left');  //Left arrow key
@@ -24,6 +25,7 @@ window.onload = function () {
     game.preload('sprites/sprite_runR.png');
     game.preload('sprites/enemy_neutral.png');
     game.preload('sprites/block.png');
+    game.preload('sprites/test.gif');
     
     //Game settings. These cannot be changed after the game has loaded. Set                   
     //them before game.start() is called.
@@ -38,7 +40,7 @@ window.onload = function () {
         
         //make block array empty
         block_array = [];
-        
+        e_array = [];        
             
         //Create new scene
         scene = new Scene();
@@ -60,18 +62,22 @@ window.onload = function () {
         //Creates block sprite starting at 100, 480 coordinates
         
         
-        var x = 20;
-        for (var i = 0; i < 3; i++){
+        var x = 100;
+        for (var i = 0; i < 4; i++){
             block = new Sprite(100, 30);
             block = Block(x, 480);
-            x += 100;
+            x += 200;
             scene.addChild(block);
         }
                 
-
         var playerSpeed = 4;
         
-        
+        //test.gif:
+        //      0 - sprite neutral
+        //      1 - sprite swing up
+        //      2 - sprite swing down
+        //      3 - runR
+        //      4 - runL     
         
         //Event listener for the left and right keys. Moves the player knight
         //left or right.
@@ -79,29 +85,37 @@ window.onload = function () {
             //Running left
             if (game.input.left && !game.input.right) {
                 this.x -= 4;
-                knight.image = game.assets['sprites/sprite_runR.png'];
+                //knight.image = game.assets['sprites/test.gif'];
+                knight.scaleX = -1;
+                knight.frame = [3, 4];
+                checkCol(knight.x, knight.y);
                 //Running right
             } else if (game.input.right && !game.input.left) {
                 this.x += 4;
-                knight.image = game.assets['sprites/sprite_runL.png'];
+                //knight.image = game.assets['sprites/test.gif.png'];
+                knight.scaleX = 1;
+                knight.frame = 4;
+                checkCol(knight.x, knight.y);
             } else if (game.input.space) {
                 var jumpLimit = knight.y - 20;
                 //var ground = 500;
                 while (knight.y > jumpLimit) {
                     knight.y -= 3;
-                    knight.image = game.assets['sprites/sprite_neutral.png'];
+                    knight.frame = 0;
                 }
-                //jump(knight);
-            } else {
-                knight.image = game.assets['sprites/sprite_neutral.png'];
+            }else {
+                checkCol(knight.x, knight.y);
+                knight.frame = [0];
             }
 
         });
-
         
+        
+
         //Appends background and label to scene as children
         
         //add objects to the scene
+        checkCol(knight.x, knight.y);
         
         scene.addChild(label);
         scene.addChild(knight);
@@ -121,7 +135,8 @@ window.onload = function () {
         knight.x = x;
         knight.y = y;
         //load knight sprite
-        knight.image = game.assets['sprites/sprite_neutral.png'];
+        knight.image = game.assets['sprites/test.gif'];
+        knight.frame = 0;
         return knight;
     }
     //enemy knight class
@@ -130,6 +145,7 @@ window.onload = function () {
         enemy.x = x;
         enemy.y = y;
         enemy.image = game.assets['sprites/enemy_neutral.png'];
+        e_array.push(enemy);
         return enemy;
     }
     //block class
@@ -143,25 +159,12 @@ window.onload = function () {
         block_array.push(block);
         return block;
     }
-    function jump_up(knight) {
-        var jumpLimit = knight.y - 20;
-                //var ground = 500;
-        while (knight.y > jumpLimit) {
-            knight.y -= 3;
-            knight.image = game.assets['sprites/sprite_neutral.png'];
+    
+    function checkCol(x, y){
+        for(var e in e_array){
+            if(x == e_array[e].x){
+                console.log("Hit");
+            }
         }
-        /*while(this.y < ground){
-            knight.y += 3;
-            knight.image = game.assets['sprites/sprite_neutral.png'];
-        }*/
-        /*var angle = 30;
-        var speed = 20;
-        var scale_x = cos(angle);
-        var scale_y = sin(angle);
-        var velocity_x = (speed * scale_x);
-        var velocity_y = (speed * scale_y);
-        knight.x = knight.x + velocity_x;
-        knight.y = knight.y + velocity.y;*/
     }
-
 };
