@@ -125,6 +125,12 @@ window.onload = function () {
         //Start scene
         game.pushScene(scene);
         console.log(knight.x);
+
+        //Executes code every frame
+
+        game.addEventListener('enterframe', function() {
+            console.log("hi");
+        });
     };
     //Initializes game
     game.start();
