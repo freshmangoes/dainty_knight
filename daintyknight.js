@@ -170,6 +170,7 @@ window.onload = function () {
 
             if(knight.within(enemy,40)){
                 console.log("hit");
+                scene.removeChild(enemy);
             }
         });
     };
