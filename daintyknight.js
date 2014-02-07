@@ -129,7 +129,21 @@ window.onload = function () {
         //Executes code every frame
 
         game.addEventListener('enterframe', function() {
-            console.log("hi");
+            //console.log("hi");
+
+             /*
+            if(knight.intersect(enemy)){
+                console.log("hit");
+            }
+            */
+
+            //If knight is within 40 pixels of the enemy's center:
+            //print "hit." 40 pixels is about the correct distance
+            //from the character to the enemy.
+
+            if(knight.within(enemy,40)){
+                console.log("hit");
+            }
         });
     };
     //Initializes game
