@@ -84,6 +84,7 @@ window.onload = function () {
         //Event listener for the left and right keys. Moves the player knight
         //left or right.
         knight.addEventListener(Event.ENTER_FRAME, function () {
+
             //Running left
             if (game.input.left && !game.input.right) {
                 this.x -= 4;
@@ -111,6 +112,14 @@ window.onload = function () {
                 knight.frame = [0];
             }
 
+
+         if (knight.x >= width - knight.width) {
+            knight.x = width - knight.width;
+        } else if (knight.x <= 0) {
+            knight.x = 0;
+        }
+
+
             if(knight.y >= height -knight.height){
             knight.y = height - knight.height;
             knight.jumping = false;
@@ -118,7 +127,13 @@ window.onload = function () {
 
             knight.vely += knight.gravity;
 
+            if((knight.y <= knight.startingPosY) && knight.jumping){
             knight.y += knight.vely
+        }else{
+            knight.jumping = false;
+            knight.y = knight.startingPosY;
+            knight.vely = 0;
+        }
 
         });
         
@@ -173,6 +188,8 @@ window.onload = function () {
         knight.friction = 0.8,
         knight.gravity = 0.2;
         knight.speed = 3;
+        knight.startingPosY = y;
+        knight.startingPosX = x;
  
         //load knight sprite
         knight.image = game.assets['sprites/test.gif'];
