@@ -5,6 +5,8 @@ use2D = true;
 
 //on document load [...]
 window.onload = function () {
+    var height = 600;
+    var width = 1000;
     //Starting point. Creating a variable called game as the game.
     var game = new Game(1000, 600);
     
@@ -97,16 +99,26 @@ window.onload = function () {
                 knight.frame = 4;
                 checkCol(knight.x, knight.y);
             } else if (game.input.space) {
-                var jumpLimit = knight.y - 20;
-                //var ground = 500;
-                while (knight.y > jumpLimit) {
-                    knight.y -= 3;
+                
+                    if(!knight.jumping){
+                    knight.jumping = true;
+                    knight.vely = -knight.speed*2;
                     knight.frame = 0;
                 }
+                
             }else {
                 checkCol(knight.x, knight.y);
                 knight.frame = [0];
             }
+
+            if(knight.y >= height -knight.height){
+            knight.y = height - knight.height;
+            knight.jumping = false;
+            }
+
+            knight.vely += knight.gravity;
+
+            knight.y += knight.vely
 
         });
         
@@ -152,8 +164,16 @@ window.onload = function () {
     //knigt class
     function Knight(x, y) {
         var knight = new Sprite(64, 64);
+        knight.height=64;
+        knight.width=64;
         knight.x = x;
         knight.y = y;
+        knight.vely = 0;
+        knight.jumping = false;
+        knight.friction = 0.8,
+        knight.gravity = 0.2;
+        knight.speed = 3;
+ 
         //load knight sprite
         knight.image = game.assets['sprites/test.gif'];
         knight.frame = 0;
