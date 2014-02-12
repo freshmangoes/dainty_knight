@@ -39,7 +39,6 @@ window.onload = function () {
         //list of variables
         var scene, label, bg, knight, time, enemy, block;
         
-        //make block array empty
         e_array = [];
         
         var map = new Map(100, 30);
@@ -102,20 +101,8 @@ window.onload = function () {
         //Creates enemy sprite starting at 300, 500 coordinates
         enemy = new Sprite(64, 64);
         enemy = E_Knight(300, 500);
-<<<<<<< HEAD
-        //Creates block sprite starting at 100, 480 coordinates
-      
-        var x = 100;
-        for (var i = 0; i < 4; i++){
-            block = new Sprite(100, 30);
-            block = Block(x, 480);
-            x += 200;
-            scene.addChild(block);
-        }
-                
-=======
+
           
->>>>>>> Platform Detection Working; Falling, not so much
         var playerSpeed = 4;
         
         //test.gif:
@@ -134,36 +121,29 @@ window.onload = function () {
                 this.x -= 4;
                 knight.scaleX = -1;
                 knight.frame = [3, 4];
-<<<<<<< HEAD
-                //Running right
-            }else if(game.input.right && !game.input.left){
-=======
-                checkCol(knight.x, knight.y);
             } else if (game.input.right && !game.input.left) {
->>>>>>> Platform Detection Working; Falling, not so much
                 this.x += 4;
                 knight.scaleX = 1;
                 knight.frame = 4;
-<<<<<<< HEAD
-            }else if(game.input.space){
-            	if(!knight.jumping){
+            } else if (game.input.space) {
+                if (!knight.jumping) {
 					knight.jumping = true;
-					knight.vely = -knight.speed*2;
+					knight.vely = -knight.speed * 2;
 					knight.frame = 0;
-                }                
-            }else{
+                }
+            } else {
                 knight.frame = [0];
-            }if(knight.x >= width - knight.width){
-            	knight.x = width - knight.width;
-        	}else if(knight.x <= 0){
-            	knight.x = 0;
-        	}
+            } 
+            
+            if (knight.x >= width - knight.width) {
+                knight.x = width - knight.width;
+            } else if (knight.x <= 0) {
+                knight.x = 0;
+            }
 			
-            if(knight.y >= height -knight.height){
-            	knight.y = height - knight.height;
-            	knight.jumping = false;
-=======
-                checkCol(knight.x, knight.y);
+            if (knight.y >= height - knight.height) {
+                knight.y = height - knight.height;
+                knight.jumping = false;
             } else if (game.input.space) {
                 if (!knight.jumping) {
                     knight.jumping = true;
@@ -174,7 +154,7 @@ window.onload = function () {
                 knight.frame = [0];
             }
 
-
+            //jumping
             if (knight.x >= width - knight.width) {
                 knight.x = width - knight.width;
             } else if (knight.x <= 0) {
@@ -185,42 +165,26 @@ window.onload = function () {
             if (knight.y >= height - knight.height) {
                 knight.y = height - knight.height;
                 knight.jumping = false;
->>>>>>> Platform Detection Working; Falling, not so much
             }
 
             knight.vely += knight.gravity;
 
-<<<<<<< HEAD
-            if((knight.y <= knight.startingPosY) && knight.jumping){
-            	knight.y += knight.vely
-        	}else{
-				knight.jumping = false;
-            	knight.y = knight.startingPosY;
-            	knight.vely = 0;
-        	}
-
-        }); 
-		
-=======
             if ((knight.y <= knight.startingPosY) && knight.jumping) {
                 knight.y += knight.vely;
             } else {
-                knight.jumping = false;
+				knight.jumping = false;
+                if(knight.y > 500){
+                    knight.y = 500;   
+                }
                 //knight.y = knight.startingPosY;
                 knight.vely = 0;
             }
-
         });
         
         
 
->>>>>>> Platform Detection Working; Falling, not so much
         //Appends background and label to scene as children
         //add objects to the scene
-<<<<<<< HEAD
-=======
-        
->>>>>>> Platform Detection Working; Falling, not so much
         scene.addChild(label);
         scene.addChild(map);
         scene.addChild(knight);
@@ -232,27 +196,23 @@ window.onload = function () {
         console.log(knight.x);
 
         //Executes code every frame
-<<<<<<< HEAD
-        game.addEventListener('enterframe', function() {
-            if(knight.within(enemy,40)){
-=======
-
         game.addEventListener('enterframe', function () {
+            //checking platform detection
+            //stops player from falling through platforms
             if(knight.jumping && map.hitTest(knight.x + 32, knight.y + 58)){
-                var k = knight.x;
                 knight.jumping = false;
-                knight.x = k;
-                console.log("hit");
-            }/*else if(!map.hitTest(knight.x + 32, knight.y + 58) && !knight.jumping && knight.y <= height){
+            }else if(!map.hitTest(knight.x + 32, knight.y + 58) && !knight.jumping && knight.y < 500){
+                knight.vely += knight.speed * 2;
+                knight.vely += knight.gravity;
                 knight.y += knight.vely;
-            }*/
-
+                console.log(knight.y);
+                //can detect if you are off a platform; falling is a little awkward but working
+            }
             //If knight is within 40 pixels of the enemy's center:
             //print "hit." 40 pixels is about the correct distance
-            //from the character to the enemy.
-
+            //from the character to the enemy. 
+            
             if (knight.within(enemy, 40)) {
->>>>>>> Platform Detection Working; Falling, not so much
                 console.log("hit");
 				scene.removeChild(enemy);
 			}
@@ -290,18 +250,4 @@ window.onload = function () {
         e_array.push(enemy);
         return enemy;
     }
-<<<<<<< HEAD
-    //block class
-    function Block(x, y) {
-        var block = new Sprite(100, 30);
-        block.x = x;
-        block.y = y;
-        block.image = game.assets['sprites/block.png'];
-        //push the block created onto the array
-        //array used in collisions
-        block_array.push(block);
-        return block;
-    }
-=======
->>>>>>> Platform Detection Working; Falling, not so much
 };
