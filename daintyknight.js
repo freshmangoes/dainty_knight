@@ -62,8 +62,7 @@ window.onload = function () {
         enemy = new Sprite(64, 64);
         enemy = E_Knight(300, 500);
         //Creates block sprite starting at 100, 480 coordinates
-        
-        
+      
         var x = 100;
         for (var i = 0; i < 4; i++){
             block = new Sprite(100, 30);
@@ -91,87 +90,60 @@ window.onload = function () {
                 //knight.image = game.assets['sprites/test.gif'];
                 knight.scaleX = -1;
                 knight.frame = [3, 4];
-                checkCol(knight.x, knight.y);
                 //Running right
-            } else if (game.input.right && !game.input.left) {
+            }else if(game.input.right && !game.input.left){
                 this.x += 4;
                 //knight.image = game.assets['sprites/test.gif.png'];
                 knight.scaleX = 1;
                 knight.frame = 4;
-                checkCol(knight.x, knight.y);
-            } else if (game.input.space) {
-                
-                    if(!knight.jumping){
-                    knight.jumping = true;
-                    knight.vely = -knight.speed*2;
-                    knight.frame = 0;
-                }
-                
-            }else {
-                checkCol(knight.x, knight.y);
+            }else if(game.input.space){
+            	if(!knight.jumping){
+					knight.jumping = true;
+					knight.vely = -knight.speed*2;
+					knight.frame = 0;
+                }                
+            }else{
                 knight.frame = [0];
-            }
-
-
-         if (knight.x >= width - knight.width) {
-            knight.x = width - knight.width;
-        } else if (knight.x <= 0) {
-            knight.x = 0;
-        }
-
-
+            }if(knight.x >= width - knight.width){
+            	knight.x = width - knight.width;
+        	}else if(knight.x <= 0){
+            	knight.x = 0;
+        	}
+			
             if(knight.y >= height -knight.height){
-            knight.y = height - knight.height;
-            knight.jumping = false;
+            	knight.y = height - knight.height;
+            	knight.jumping = false;
             }
 
             knight.vely += knight.gravity;
 
             if((knight.y <= knight.startingPosY) && knight.jumping){
-            knight.y += knight.vely
-        }else{
-            knight.jumping = false;
-            knight.y = knight.startingPosY;
-            knight.vely = 0;
-        }
+            	knight.y += knight.vely
+        	}else{
+				knight.jumping = false;
+            	knight.y = knight.startingPosY;
+            	knight.vely = 0;
+        	}
 
-        });
-        
-        
-
+        }); 
+		
         //Appends background and label to scene as children
-        
         //add objects to the scene
-        checkCol(knight.x, knight.y);
-        
         scene.addChild(label);
         scene.addChild(knight);
         scene.addChild(enemy);
         //scene.addChild(block);
-        
+  
         //Start scene
         game.pushScene(scene);
         console.log(knight.x);
 
         //Executes code every frame
-
         game.addEventListener('enterframe', function() {
-            //console.log("hi");
-
-             /*
-            if(knight.intersect(enemy)){
-                console.log("hit");
-            }
-            */
-
-            //If knight is within 40 pixels of the enemy's center:
-            //print "hit." 40 pixels is about the correct distance
-            //from the character to the enemy.
-
             if(knight.within(enemy,40)){
                 console.log("hit");
-                scene.removeChild(enemy);
-            }
+				scene.removeChild(enemy);
+			}
         });
     };
     //Initializes game
@@ -216,13 +188,5 @@ window.onload = function () {
         //array used in collisions
         block_array.push(block);
         return block;
-    }
-    
-    function checkCol(x, y){
-        for(var e in e_array){
-            if(x == e_array[e].x){
-                console.log("Hit");
-            }
-        }
     }
 };
