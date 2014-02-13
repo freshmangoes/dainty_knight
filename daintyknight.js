@@ -1,3 +1,14 @@
+/*
+Things that need to be done:
+    1. fighting
+    2. scrolling screen
+    3. animation
+Things that need to be polished
+    1. platforming
+
+*/
+
+
 //Initialize enchant.js as the game engine
 enchant();
 use2D = true;
@@ -43,7 +54,9 @@ window.onload = function () {
         
         var map = new Map(100, 30);
         map.image = game.assets['sprites/block.png'];
-        
+        //places blocks onto the scene
+        //      1 = empty
+        //      0 = filled
         map.loadData([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -63,6 +76,9 @@ window.onload = function () {
                       [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
                       [1, 0, 1, 1, 1, 1, 1, 1, 1, 1]]);
         
+        //collision map - matches map above but with switched numbers
+        //      0 = no object in the way
+        //      1 = object in the way
         var collision_map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -120,21 +136,22 @@ window.onload = function () {
             if (game.input.left && !game.input.right) {
                 this.x -= 4;
                 knight.scaleX = -1;
-                knight.frame = [3, 4];
+                knight.frame = 4;
             } else if (game.input.right && !game.input.left) {
                 this.x += 4;
                 knight.scaleX = 1;
                 knight.frame = 4;
             } else if (game.input.space) {
-                if (!knight.jumping) {
+                if (!knight.jumping && !knight.falling) {
 					knight.jumping = true;
 					knight.vely = -knight.speed * 2;
 					knight.frame = 0;
                 }
             } else {
                 knight.frame = [0];
-            } 
+            }
             
+            //sprite jumping
             if (knight.x >= width - knight.width) {
                 knight.x = width - knight.width;
             } else if (knight.x <= 0) {
@@ -145,9 +162,9 @@ window.onload = function () {
                 knight.y = height - knight.height;
                 knight.jumping = false;
             } else if (game.input.space) {
-                if (!knight.jumping) {
+                if (!knight.jumping && !knight.falling) {
                     knight.jumping = true;
-                    knight.vely =- knight.speed * 2;
+                    knight.vely = -knight.speed * 2;
                     knight.frame = 0;
                 }
             } else {
@@ -173,10 +190,10 @@ window.onload = function () {
                 knight.y += knight.vely;
             } else {
 				knight.jumping = false;
-                if(knight.y > 500){
-                    knight.y = 500;   
+                if (knight.y > 500) {
+                    knight.y = 500;
+                    knight.falling = false;
                 }
-                //knight.y = knight.startingPosY;
                 knight.vely = 0;
             }
         });
@@ -189,33 +206,38 @@ window.onload = function () {
         scene.addChild(map);
         scene.addChild(knight);
         scene.addChild(enemy);
-        //scene.addChild(block);
-  
+
         //Start scene
         game.pushScene(scene);
-        console.log(knight.x);
 
         //Executes code every frame
         game.addEventListener('enterframe', function () {
             //checking platform detection
-            //stops player from falling through platforms
-            if(knight.jumping && map.hitTest(knight.x + 32, knight.y + 58)){
+            //player falls walking off platform
+            if (knight.jumping && map.hitTest(knight.x + 32, knight.y + 58)) {
+                //stops falling from happening
                 knight.jumping = false;
-            }else if(!map.hitTest(knight.x + 32, knight.y + 58) && !knight.jumping && knight.y < 500){
-                knight.vely += knight.speed * 2;
+                knight.falling = false;
+            } else if (!map.hitTest(knight.x + 32, knight.y + 58) && !knight.jumping && knight.y < 500) {
+                //speed of the falling
+                knight.falling = true;
+                knight.vely += knight.speed * 1.3;
+                //makes it so the sprite goes downward
                 knight.vely += knight.gravity;
                 knight.y += knight.vely;
-                console.log(knight.y);
-                //can detect if you are off a platform; falling is a little awkward but working
+                console.log(knight.falling);
             }
+            
             //If knight is within 40 pixels of the enemy's center:
             //print "hit." 40 pixels is about the correct distance
             //from the character to the enemy. 
-            
             if (knight.within(enemy, 40)) {
                 console.log("hit");
 				scene.removeChild(enemy);
 			}
+            
+           
+            
         });
     };
     //Initializes game
@@ -230,6 +252,7 @@ window.onload = function () {
         knight.y = y;
         knight.vely = 0;
         knight.jumping = false;
+        knight.falling = false;
         knight.friction = 0.8;
         knight.gravity = 0.2;
         knight.speed = 3;
